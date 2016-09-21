@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>search</title>
+    <style type="text/css">
+        html{height:100%}
+        body{height:100%;margin:0px;padding:0px}
+        #container{height:100%}
+    </style>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Nv4xifhhDjKpB1DP6uDwd3cNbHeH2PaV">
+        //v2.0版本的引用方式：src="http://api.map.baidu.com/api?v=2.0&ak=您的密钥"
+        //v1.4版本及以前版本的引用方式：src="http://api.map.baidu.com/api?v=1.4&key=您的密钥&callback=initialize"
+    </script>
+</head>
+
+<body>
+<div id="container"></div>
+<script type="text/javascript">
+    //可以使用Map.addControl()方法向地图添加控件。在此之前地图需要进行初始化。例如，要将标准地图控件添加到地图中，可在代码中添加如下内容：
+    var map = new BMap.Map("container");
+    map.centerAndZoom(new BMap.Point(116.404, 39.915), 15);
+//    var local = new BMap.LocalSearch(map, {
+//        renderOptions:{map: map}
+//    });
+//    local.search("天安门");
+
+    //每页显示8个结果，并且根据结果点位置自动调整地图视野，不显示第一条结果的信息窗口
+    var local = new BMap.LocalSearch("北京市",
+            {renderOptions: {map: map,autoViewport: true},pageCapacity: 3});
+    local.search("中关村");
+</script>
+</body>
+</html>

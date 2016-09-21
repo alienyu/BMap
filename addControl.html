@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>addControl</title>
+    <style type="text/css">
+        html{height:100%}
+        body{height:100%;margin:0px;padding:0px}
+        #container{height:100%}
+    </style>
+    <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Nv4xifhhDjKpB1DP6uDwd3cNbHeH2PaV">
+        //v2.0版本的引用方式：src="http://api.map.baidu.com/api?v=2.0&ak=您的密钥"
+        //v1.4版本及以前版本的引用方式：src="http://api.map.baidu.com/api?v=1.4&key=您的密钥&callback=initialize"
+    </script>
+</head>
+
+<body>
+<div id="container"></div>
+<script type="text/javascript">
+    //可以使用Map.addControl()方法向地图添加控件。在此之前地图需要进行初始化。例如，要将标准地图控件添加到地图中，可在代码中添加如下内容：
+    var map = new BMap.Map("container");
+    map.centerAndZoom(new BMap.Point(116.404, 39.915), 15);
+    map.addControl(new BMap.NavigationControl());
+    //可以向地图添加多个控件。在本例中我们向地图添加一个平移缩放控件、一个比例尺控件和一个缩略图控件。在地图中添加控件后，它们即刻生效。
+    map.addControl(new BMap.ScaleControl());
+    map.addControl(new BMap.OverviewMapControl());
+    map.addControl(new BMap.MapTypeControl());
+    map.setCurrentCity("北京"); // 仅当设置城市信息时，MapTypeControl的切换功能才能可用
+
+    /*初始化控件时，可提供一个可选参数，其中的anchor和offset属性共同控制控件在地图上的位置。
+     控件停靠位置 anchor表示控件的停靠位置，即控件停靠在地图的哪个角。当地图尺寸发生变化时，控件会根据停靠位置的不同来调整自己的位置。anchor允许的值为：
+     BMAP_ANCHOR_TOP_LEFT 表示控件定位于地图的左上角。
+     BMAP_ANCHOR_TOP_RIGHT 表示控件定位于地图的右上角。
+     BMAP_ANCHOR_BOTTOM_LEFT 表示控件定位于地图的左下角。
+     BMAP_ANCHOR_BOTTOM_RIGHT 表示控件定位于地图的右下角。*/
+
+    //控件位置偏移
+    var opts = {offset: new BMap.Size(140, 50)}  //(横向, 纵向)
+    map.addControl(new BMap.ScaleControl(opts));
+
+    //自定义控件
+    // 定义一个控件类，即function
+    function ZoomControl(){
+        // 设置默认停靠位置和偏移量
+        this.defaultAnchor = BMAP_ANCHOR_TOP_LEFT;
+        this.defaultOffset = new BMap.Size(100, 50);
+    }
+    // 通过JavaScript的prototype属性继承于BMap.Control
+    ZoomControl.prototype = new BMap.Control();
+    // 自定义控件必须实现initialize方法，并且将控件的DOM元素返回
+    // 在本方法中创建个div元素作为控件的容器，并将其添加到地图容器中
+    ZoomControl.prototype.initialize = function(map){
+        // 创建一个DOM元素
+        var div = document.createElement("div");
+        // 添加文字说明
+        div.appendChild(document.createTextNode("放大2级"));
+        // 设置样式
+        div.style.cursor = "pointer";
+        div.style.border = "1px solid gray";
+        div.style.backgroundColor = "white";
+        // 绑定事件，点击一次放大两级
+        div.onclick = function(e){
+            map.zoomTo(map.getZoom() + 2);
+        }
+        // 添加DOM元素到地图中
+        map.getContainer().appendChild(div);
+        // 将DOM元素返回
+        return div;
+    }
+    // 创建控件实例
+    var myZoomCtrl = new ZoomControl();
+    map.addControl(myZoomCtrl);
+</script>
+</body>
+</html>
